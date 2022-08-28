@@ -14,6 +14,19 @@ namespace BuisnessLayer.Services
         {
             this.userRL = userRL;
         }
+
+        public string LoginUser(LoginModel loginModel)
+        {
+            try
+            {
+                return userRL.LoginUser(loginModel);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void Register(UserPostModel userPostModel)
         {
             try

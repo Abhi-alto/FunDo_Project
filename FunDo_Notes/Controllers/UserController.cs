@@ -47,5 +47,22 @@ namespace FunDo_Notes.Controllers
                 throw ex;
             }
         }
+        [HttpPost("Forget Password")]
+        public IActionResult ForgetPassword(string email)
+        {
+            try
+            {
+                bool token = this.userBL.ForgetPassword(email);
+                if (token != false)
+                {
+                    return this.Ok(new { success = true, status = 200, message = $"Verification code sent to the email id - {email}" });
+                }
+                return this.BadRequest(new { success = false, message = $"Verification code can't be sent" });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

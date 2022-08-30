@@ -120,7 +120,7 @@ namespace RepositoryLayer.Services
                 FundoQ.Send(MyMessage);
                 Message msg = FundoQ.Receive();
                 msg.Formatter = new BinaryMessageFormatter();
-                EmailService.SendEmail(email, msg.Body.ToString());
+                EmailService.SendEmail(email, msg.Body.ToString(),user.FirstName);
                 FundoQ.ReceiveCompleted += new ReceiveCompletedEventHandler(msmqQueue_ReceiveCompleted);
 
                 FundoQ.BeginReceive();
@@ -141,7 +141,7 @@ namespace RepositoryLayer.Services
             {
                 MessageQueue queue = (MessageQueue)sender;
                 Message msg = queue.EndReceive(e.AsyncResult);
-                EmailService.SendEmail(e.Message.ToString(), GenerateToken(e.Message.ToString()));
+                EmailService.SendEmail(e.Message.ToString(), GenerateToken(e.Message.ToString()), e.Message.ToString());
                 queue.BeginReceive();
 
             }

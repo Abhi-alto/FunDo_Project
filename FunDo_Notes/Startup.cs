@@ -73,7 +73,8 @@ namespace FunDo_Notes
                     }
                 });
             });
-
+            /*var secret = this.Configuration.GetSection("JwtConfig").GetSection("SecretKey").Value;
+            var key = Encoding.ASCII.GetBytes(secret);*/
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,15 +82,16 @@ namespace FunDo_Notes
 
             }).AddJwtBearer(options =>
             {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = false,
+
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["Jwt:Issuer"],
-                    ValidAudience = Configuration["Jwt:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])) //Configuration["JwtToken:SecretKey"]  
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsMYSecretKey")), //Configuration["JwtToken:SecretKey"],
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+
                 };
             });
             services.AddTransient<IUserRL, UserRL>();

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 using System.Text;
 
 namespace RepositoryLayer.Services
@@ -45,7 +46,7 @@ namespace RepositoryLayer.Services
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var tokenKey = Encoding.ASCII.GetBytes("THIS_IS_MY_KEY_TO_GENERATE_TOKEN");
+                var tokenKey = Encoding.ASCII.GetBytes("ThisIsMYSecretKey");
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
@@ -145,6 +146,23 @@ namespace RepositoryLayer.Services
                 queue.BeginReceive();
 
             }
+            catch (MessageQueueException ex)
+
+            {
+
+                if (ex.MessageQueueErrorCode ==
+
+                MessageQueueErrorCode.AccessDenied)
+
+                {
+
+                    Console.WriteLine("Access is denied. " +
+
+                    "Queue might be a system queue.");
+
+                }
+
+            }
             catch (Exception ex)
             {
                 throw ex;
@@ -156,7 +174,7 @@ namespace RepositoryLayer.Services
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var tokenKey = Encoding.ASCII.GetBytes("THIS_IS_MY_KEY_TO_GENERATE_TOKEN");
+                var tokenKey = Encoding.ASCII.GetBytes("ThisIsMYSecretKey");
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
@@ -175,6 +193,25 @@ namespace RepositoryLayer.Services
                 return tokenHandler.WriteToken(token);
             }
             catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool ResetPassword(string email, PasswordModel passwordModel)
+        {
+            try
+            {
+                var user = fundoContext.Users.Where(x => x.email == email).FirstOrDefault();
+                if (passwordModel.NewPassword != passwordModel.CPassword)
+                {
+                    return false;
+                }
+                user.password= passwordModel.NewPassword;
+                fundoContext.SaveChanges();
+                return true;
+            }
+            catch(Exception ex)
             {
                 throw ex;
             }

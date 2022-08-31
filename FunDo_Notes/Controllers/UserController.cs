@@ -47,7 +47,7 @@ namespace FunDo_Notes.Controllers
                 {
                     return this.Ok(new { success = true, status = 200, Token = token, message = $"Login successful for {loginModel.Email}" });
                 }
-                return this.Ok(new { success = false, Token = token, message = $"Email not found...Register yourself" });
+                return this.BadRequest(new { success = false, Token = token, message = $"Email not found...Register yourself" });
             }
             catch (Exception ex)
             {
@@ -64,7 +64,7 @@ namespace FunDo_Notes.Controllers
                 {
                     return this.Ok(new { success = true, status = 200, message = $"Reset Password link sent to the email id - {email}" });
                 }
-                return this.BadRequest(new { success = false, message = $"Verification code can't be sent" });
+                return this.BadRequest(new { success = false, message = $"Reset password link not sent" });
             }
             catch (Exception ex)
             {

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using RepositoryLayer.Services;
+using RepositoryLayer.Services.Entities;
 using System;
 using System.Linq;
 
@@ -67,6 +68,21 @@ namespace FunDo_Notes.Controllers
             }
             bool answer= this.noteBL.DeleteNote(UserID, NoteID);
             return this.Ok(new { success = true, status = 200, message = "Note deleted successfully" });
+        }
+        [Authorize]
+        [HttpGet("GetNote/{NoteID}")]
+        public IActionResult GetNote(int NoteID)
+        {
+            Note specificNote=new Note();
+            var getNote = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+            var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+            int UserID = Int32.Parse(userid.Value);
+            if(getNote==null)
+            {
+                return this.BadRequest(new { success = false, status = 200, message = "Provide an existing Note ID" });
+            }
+            specificNote=this.noteBL.GetNote(UserID, NoteID);
+            return this.Ok(new { success = true, status = 200, note=specificNote });
         }
     }
 }

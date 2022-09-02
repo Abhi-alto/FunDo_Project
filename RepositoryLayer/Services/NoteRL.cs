@@ -38,14 +38,34 @@ namespace RepositoryLayer.Services
 
         public bool DeleteNote(int UserId, int NoteID)
         {
-            var deleteNote = fundoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
-            if(deleteNote == null)
+            try
             {
-                return false;
+                var deleteNote = fundoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                if (deleteNote == null)
+                {
+                    return false;
+                }
+                fundoContext.Notes.Remove(deleteNote);
+                fundoContext.SaveChanges();
+                return true;
             }
-            fundoContext.Notes.Remove(deleteNote);
-            fundoContext.SaveChanges();
-            return true;
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Note GetNote(int UserId, int NoteID)
+        {
+            try
+            {
+                var getNote = fundoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                return getNote;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public void UpdateNote(UpdateNoteModel updateNoteModel, int UserId, int NoteID)

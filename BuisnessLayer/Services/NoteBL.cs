@@ -3,6 +3,7 @@ using CommonLayer;
 using CommonLayer.Notes;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Services;
+using RepositoryLayer.Services.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,6 +35,18 @@ namespace BuisnessLayer.Services
             try
             {
                 return this.noteRL.DeleteNote(UserId, NoteID);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Note GetNote(int UserId, int NoteID)
+        {
+            try
+            {
+                return this.noteRL.GetNote(UserId, NoteID);
             }
             catch(Exception ex)
             {

@@ -8,15 +8,12 @@ namespace CommonLayer
     public class NoteModel
     {
         [Required]
+        [RegularExpression(@"^[A-Z]{1}[A-Za-z]{3,}", ErrorMessage = "Start with a capital letter and must have minimum three letters")]
         public string Title { get; set; }
         [Required]
         public string Description { get; set; }
         [Required]
         public string Colour { get; set; }
-       /* public bool isPin { get; set; }
-        public bool isReminder { get; set; }
-        public bool isArchive { get; set; }
-        public bool isTrash { get; set; }
-        public DateTime Reminder{ get; set; }*/
+
     }
 }

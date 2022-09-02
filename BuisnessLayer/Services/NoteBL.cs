@@ -1,5 +1,6 @@
 ﻿using BuisnessLayer.Interface;
 using CommonLayer;
+using CommonLayer.Notes;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Services;
 using System;
@@ -21,6 +22,18 @@ namespace BuisnessLayer.Services
             try
             {
                 this.noteRL.AddNote(noteModel,UserId);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void UpdateNote(UpdateNoteModel updateNoteModel, int UserId, int NoteID)
+        {
+            try
+            {
+                this.noteRL.UpdateNote(updateNoteModel, UserId, NoteID);
             }
             catch(Exception ex)
             {

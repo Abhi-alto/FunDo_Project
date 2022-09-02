@@ -1,5 +1,6 @@
 ﻿using BuisnessLayer.Interface;
 using CommonLayer;
+using CommonLayer.Notes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,8 @@ using System.Linq;
 
 namespace FunDo_Notes.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class NoteController : Controller
     {
         INoteBL noteBL;
@@ -36,6 +39,20 @@ namespace FunDo_Notes.Controllers
             {
                 throw e;
             }
+        }
+        [Authorize]
+        [HttpPut("UpdateNote/{NoteID}")]
+        public IActionResult UpdateNote(UpdateNoteModel updateNoteModel,int NoteID)
+        {
+            var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+            var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+            int UserID = Int32.Parse(userid.Value);
+            if(note==null)
+            {
+                return this.BadRequest(new { success = false, status = 200, message = "Provide a correct note" });
+            }
+            this.noteBL.UpdateNote(updateNoteModel, UserID, NoteID);
+            return this.Ok(new { success = true, status = 200, message = "Note Added successfully" });
         }
     }
 }

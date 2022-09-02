@@ -155,11 +155,8 @@ namespace RepositoryLayer.Services
                 MessageQueueErrorCode.AccessDenied)
 
                 {
-
                     Console.WriteLine("Access is denied. " +
-
                     "Queue might be a system queue.");
-
                 }
 
             }

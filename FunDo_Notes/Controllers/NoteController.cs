@@ -54,5 +54,19 @@ namespace FunDo_Notes.Controllers
             this.noteBL.UpdateNote(updateNoteModel, UserID, NoteID);
             return this.Ok(new { success = true, status = 200, message = "Note Added successfully" });
         }
+        [Authorize]
+        [HttpDelete("DeleteNote/{NoteID}")]
+        public IActionResult DeleteNote(int NoteID)
+        {
+            var deleteNote = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+            var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+            int UserID = Int32.Parse(userid.Value);
+            if(deleteNote==null)
+            {
+                return this.BadRequest(new { success = false, status = 200, message = "Provide an existing note" });
+            }
+            bool answer= this.noteBL.DeleteNote(UserID, NoteID);
+            return this.Ok(new { success = true, status = 200, message = "Note deleted successfully" });
+        }
     }
 }

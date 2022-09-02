@@ -10,5 +10,6 @@ namespace RepositoryLayer.Interface
     {
         void AddNote(NoteModel noteModel,int UserId);
         public void UpdateNote(UpdateNoteModel updateNoteModel,int UserId,int NoteID);
+        public bool DeleteNote(int UserId,int NoteID);
     }
 }

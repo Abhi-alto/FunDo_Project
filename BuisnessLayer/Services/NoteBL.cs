@@ -2,11 +2,13 @@
 using CommonLayer;
 using CommonLayer.Notes;
 using RepositoryLayer.Interface;
+using RepositoryLayer.Migrations;
 using RepositoryLayer.Services;
 using RepositoryLayer.Services.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Note = RepositoryLayer.Services.Entities.Note;
 
 namespace BuisnessLayer.Services
 {
@@ -35,6 +37,18 @@ namespace BuisnessLayer.Services
             try
             {
                 return this.noteRL.DeleteNote(UserId, NoteID);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<NoteResponseModel> GetAllNotes(int UserId)
+        {
+            try
+            {
+                return this.noteRL.GetAllNotes(UserId);
             }
             catch(Exception ex)
             {

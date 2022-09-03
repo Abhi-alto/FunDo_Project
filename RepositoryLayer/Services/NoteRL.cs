@@ -1,5 +1,6 @@
 ﻿using CommonLayer;
 using CommonLayer.Notes;
+using Microsoft.EntityFrameworkCore;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Services.Entities;
 using System;
@@ -48,6 +49,37 @@ namespace RepositoryLayer.Services
                 fundoContext.Notes.Remove(deleteNote);
                 fundoContext.SaveChanges();
                 return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<NoteResponseModel> GetAllNotes(int UserId)
+        {
+            try
+            {
+                var user=fundoContext.Users.Where(x => x.UserId == UserId).FirstOrDefault();
+                //var note=fundoContext.Notes.Where(x => x.UserId == UserId).ToList(); // using LINQ
+                //using LINQ join
+                return fundoContext.Users
+               .Where(u => u.UserId == UserId)
+               .Join(fundoContext.Notes,
+               u => u.UserId,
+               n => n.UserId,
+               (u, n) => new NoteResponseModel
+               {
+                   NoteID = n.NoteID,
+                   UserId = u.UserId,
+                   Title = n.Title,
+                   Description = n.Description,
+                   Colour = n.Colour,
+                   Firstname = u.FirstName,
+                   Lasttname = u.LastName,
+                   Email = u.email,
+                   CreatedDate = u.CreatedDate,
+               }).ToList();
             }
             catch(Exception ex)
             {

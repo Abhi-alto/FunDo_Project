@@ -9,6 +9,7 @@ using RepositoryLayer.Services.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FunDo_Notes.Controllers
 {
@@ -56,7 +57,7 @@ namespace FunDo_Notes.Controllers
                     return this.BadRequest(new { success = false, status = 200, message = "Provide a correct note" });
                 }
                 this.noteBL.UpdateNote(updateNoteModel, UserID, NoteID);
-                return this.Ok(new { success = true, status = 200, message = "Note Added successfully" });
+                return this.Ok(new { success = true, status = 200, message = "Note Updated successfully" });
             }
             catch (Exception ex)
             {
@@ -117,6 +118,93 @@ namespace FunDo_Notes.Controllers
                 List<NoteResponseModel> note = new List<NoteResponseModel>();
                 note=this.noteBL.GetAllNotes(UserID);
                 return this.Ok(new { success = true, status = 200, noteList = note });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [Authorize]
+        [HttpPut("Archive/{NoteID}")]
+        public async Task<IActionResult> ArchiveNote(int NoteID)
+        {
+            try
+            {
+                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                int UserID = Int32.Parse(userid.Value);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, status = 400, message = "Provide a correct note" });
+                }
+                var Archive = await this.noteBL.ArchiveNote(UserID, NoteID);
+                return this.Ok(new { success = true, status = 200, message = "Archive toggle button pressed successfully" });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Authorize]
+        [HttpPut("Pin_Note/{NoteID}")]
+        public async Task<IActionResult> PinNote(int NoteID)
+        {
+            try
+            {
+                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                int UserID = Int32.Parse(userid.Value);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, status = 400, message = "Provide a correct note" });
+                }
+                var Pin = await this.noteBL.PinNote(UserID, NoteID);
+                return this.Ok(new { success = true, status = 200, message = "Pin toggle button pressed successfully" });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Authorize]
+        [HttpPut("Trash/{NoteID}")]
+        public async Task<IActionResult> Trash_Note(int NoteID)
+        {
+            try
+            {
+                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                int UserID = Int32.Parse(userid.Value);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, status = 400, message = "Provide a correct note" });
+                }
+                var Trash = await this.noteBL.Trash_Note(UserID, NoteID);
+                return this.Ok(new { success = true, status = 200, message = " Toggle button pressed successfully" });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [Authorize]
+        [HttpPut("Reminder/{NoteID}/{reminder}")]
+        public async Task<IActionResult> ReminderNote(int NoteID,NoteReminderModel reminder)
+        {
+            try
+            {
+                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                int UserID = Int32.Parse(userid.Value);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, status = 400, message = "Provide a correct note" });
+                }
+                var remind = Convert.ToDateTime(reminder.Reminder);
+                await this.noteBL.ReminderNote(UserID, NoteID,remind);
+                return this.Ok(new { success = true, status = 200, message = " Note reminder added successfully" });
             }
             catch (Exception ex)
             {

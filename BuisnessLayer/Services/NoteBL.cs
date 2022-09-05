@@ -8,6 +8,7 @@ using RepositoryLayer.Services.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Note = RepositoryLayer.Services.Entities.Note;
 
 namespace BuisnessLayer.Services
@@ -25,6 +26,18 @@ namespace BuisnessLayer.Services
             try
             {
                 this.noteRL.AddNote(noteModel,UserId);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> ArchiveNote(int UserId, int NoteID)
+        {
+            try
+            {
+                return await this.noteRL.ArchiveNote(UserId,NoteID);
             }
             catch(Exception ex)
             {
@@ -68,6 +81,31 @@ namespace BuisnessLayer.Services
             }
         }
 
+        public async Task<bool> PinNote(int UserId, int NoteID)
+        {
+            try
+            {
+                return await this.noteRL.PinNote(UserId, NoteID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public async Task<bool> Trash_Note(int UserId, int NoteID)
+        {
+            try
+            {
+                return await this.noteRL.Trash_Note(UserId, NoteID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void UpdateNote(UpdateNoteModel updateNoteModel, int UserId, int NoteID)
         {
             try
@@ -75,6 +113,17 @@ namespace BuisnessLayer.Services
                 this.noteRL.UpdateNote(updateNoteModel, UserId, NoteID);
             }
             catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<bool> ReminderNote(int UserId, int NoteID, DateTime reminder)
+        {
+            try
+            {
+                return await this.noteRL.ReminderNote(UserId, NoteID,reminder);
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }

@@ -98,6 +98,8 @@ namespace FunDo_Notes
             services.AddTransient<IUserBL, UserBL>();
             services.AddTransient<INoteRL, NoteRL>();
             services.AddTransient<INoteBL, NoteBL>();
+            services.AddTransient<ILabelRL, LabelRL>();
+            services.AddTransient<ILabelBL, LabelBL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

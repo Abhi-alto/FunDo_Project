@@ -268,5 +268,31 @@ namespace RepositoryLayer.Services
                 throw ex;
             }
         }
+
+        public Task<bool> DeleteColour(int UserId, int NoteID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<NotesColourModel> GetAllNote_Colour(int UserId)
+        {
+            try
+            {
+                var user = fundoContext.Users.Where(x => x.UserId == UserId).FirstOrDefault();
+                return fundoContext.Users
+               .Where(u => u.UserId == UserId)
+               .Join(fundoContext.Notes,
+               u => u.UserId,
+               n => n.UserId,
+               (u, n) => new NotesColourModel
+               {
+                   Colour = n.Colour,
+               }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

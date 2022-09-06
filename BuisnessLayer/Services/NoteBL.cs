@@ -152,5 +152,17 @@ namespace BuisnessLayer.Services
                 throw ex;
             }
         }
+
+        public List<NotesColourModel> GetAllNote_Colour(int UserId)
+        {
+            try
+            {
+                return this.noteRL.GetAllNote_Colour(UserId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

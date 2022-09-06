@@ -261,5 +261,23 @@ namespace FunDo_Notes.Controllers
                 throw ex;
             }
         }
+
+        [Authorize]
+        [HttpGet("GetAllNotesColour")]
+        public IActionResult GetAllNote_Colour()
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                int UserID = Int32.Parse(userid.Value);
+                List<NotesColourModel> note = new List<NotesColourModel>();
+                note = this.noteBL.GetAllNote_Colour(UserID);
+                return this.Ok(new { success = true, status = 200, noteList = note });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

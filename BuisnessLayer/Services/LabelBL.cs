@@ -27,6 +27,18 @@ namespace BuisnessLayer.Services
             }
         }
 
+        public async Task<bool> Delete_NoteLabel(int UserId, int NoteID)
+        {
+            try
+            {
+                return await this.labelRL.Delete_NoteLabel(UserId, NoteID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<bool> Update_NoteLabel(int UserId, int NoteID, string LabelName)
         {
             try

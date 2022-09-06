@@ -34,6 +34,26 @@ namespace RepositoryLayer.Services
             }
         }
 
+        public async Task<bool> Delete_NoteLabel(int UserId, int NoteID)
+        {
+            try
+            {
+                var note = fundoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                if (note.isTrash == true || note == null)
+                {
+                    return false;
+                }
+                var label = fundoContext.Labels.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                fundoContext.Labels.Remove(label);
+                await fundoContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<bool> Update_NoteLabel(int UserId, int NoteID, string LabelName)
         {
             try

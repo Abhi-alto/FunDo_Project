@@ -21,7 +21,6 @@ namespace RepositoryLayer.Interface
         Task<bool> ReminderNote(int UserId,int NoteID,DateTime reminder);
         Task<bool> DeleteReminder(int UserId,int NoteID);
         Task<bool> UpdateColour(int UserId,int NoteID ,string Colour);
-        Task<bool> DeleteColour(int UserId,int NoteID);
         public List<NotesColourModel> GetAllNote_Colour(int UserId);
 
     }

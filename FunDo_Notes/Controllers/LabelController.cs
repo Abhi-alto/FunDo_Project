@@ -43,5 +43,30 @@ namespace FunDo_Notes.Controllers
                 throw ex;
             }
         }
+        [Authorize]
+        [HttpPut("UpdateLabel/{NoteID}/{LabelName}")]
+        public async Task<IActionResult> Update_NoteLabel(int NoteID, string LabelName)
+        {
+            try
+            {
+                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                int UserID = Int32.Parse(userid.Value);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, status = 400, message = "Provide a correct note" });
+                }
+                var res= await this.labelBl.Update_NoteLabel(UserID, NoteID, LabelName);
+                if (res == true)
+                {
+                    return this.Ok(new { success = true, status = 200, message = "Label updated successfully" });
+                }
+                return this.BadRequest(new { success = false, status = 400, message = "Note in the trash folder ..... Label cannot be updated" });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

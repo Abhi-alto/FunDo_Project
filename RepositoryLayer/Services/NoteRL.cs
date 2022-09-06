@@ -268,12 +268,6 @@ namespace RepositoryLayer.Services
                 throw ex;
             }
         }
-
-        public Task<bool> DeleteColour(int UserId, int NoteID)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<NotesColourModel> GetAllNote_Colour(int UserId)
         {
             try

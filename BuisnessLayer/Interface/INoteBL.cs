@@ -19,5 +19,6 @@ namespace BuisnessLayer.Interface
         Task<bool> PinNote(int UserId, int NoteID);
         Task<bool> Trash_Note(int UserId, int NoteID);
         Task<bool> ReminderNote(int UserId, int NoteID, DateTime reminder);
+        Task<bool> DeleteReminder(int UserId, int NoteID);
     }
 }

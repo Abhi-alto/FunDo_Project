@@ -128,5 +128,17 @@ namespace BuisnessLayer.Services
                 throw ex;
             }
         }
+
+        public async Task<bool> DeleteReminder(int UserId, int NoteID)
+        {
+            try
+            {
+                return await this.noteRL.DeleteReminder(UserId, NoteID);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

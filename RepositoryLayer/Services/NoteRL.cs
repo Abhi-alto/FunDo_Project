@@ -230,5 +230,24 @@ namespace RepositoryLayer.Services
             }
         }
 
+        public async Task<bool> DeleteReminder(int UserId, int NoteID)
+        {
+            try
+            {
+                var note = fundoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                if (note.isTrash == true|| note.isReminder == false)
+                {
+                    return false;
+                }
+                note.isReminder = false;
+                note.Reminder=default(DateTime);
+                await fundoContext.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

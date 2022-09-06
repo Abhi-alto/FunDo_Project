@@ -236,5 +236,30 @@ namespace FunDo_Notes.Controllers
                 throw ex;
             }
         }
+        [Authorize]
+        [HttpPut("UpdateNoteColour/{NoteID}/{Colour}")]
+        public async Task<IActionResult> UpdateColour( int NoteID,string Colour)
+        {
+            try
+            {
+                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                int UserID = Int32.Parse(userid.Value);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, status = 200, message = "Provide a correct note" });
+                }
+                var res=await this.noteBL.UpdateColour(UserID, NoteID,Colour);
+                if (res == true)
+                {
+                    return this.Ok(new { success = true, status = 200, message = " Note colour updated successfully" });
+                }
+                return this.BadRequest(new { success = true, status = 200, message = "Cannot change colour....note in the trash folder" });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

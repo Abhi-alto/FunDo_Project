@@ -249,5 +249,24 @@ namespace RepositoryLayer.Services
                 throw ex;
             }
         }
+
+        public async Task<bool> UpdateColour(int UserId, int NoteID, string Colour)
+        {
+            try
+            {
+                var note = fundoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                if (note.isTrash == true)
+                {
+                    return false;
+                }
+                note.Colour = Colour;
+                await fundoContext.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

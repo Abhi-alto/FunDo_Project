@@ -20,5 +20,6 @@ namespace BuisnessLayer.Interface
         Task<bool> Trash_Note(int UserId, int NoteID);
         Task<bool> ReminderNote(int UserId, int NoteID, DateTime reminder);
         Task<bool> DeleteReminder(int UserId, int NoteID);
+        Task<bool> UpdateColour(int UserId, int NoteID, string Colour);
     }
 }

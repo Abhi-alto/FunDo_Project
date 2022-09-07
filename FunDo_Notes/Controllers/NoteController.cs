@@ -3,12 +3,16 @@ using CommonLayer;
 using CommonLayer.Notes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RepositoryLayer.Services;
 using RepositoryLayer.Services.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FunDo_Notes.Controllers
@@ -20,11 +24,15 @@ namespace FunDo_Notes.Controllers
         INoteBL noteBL;
         private IConfiguration _config;
         public FunDoContext funDoContext;
-        public NoteController(INoteBL noteBL, IConfiguration config, FunDoContext funDoContext)
+        private readonly IDistributedCache _cache;
+        private readonly IMemoryCache memoryCache;
+        public NoteController(INoteBL noteBL, IConfiguration config, FunDoContext funDoContext, IDistributedCache _cache, IMemoryCache memoryCache)
         {
             this.noteBL = noteBL;
             _config = config;
             this.funDoContext = funDoContext;
+            this._cache = _cache;
+            this.memoryCache = memoryCache;
         }
         [Authorize]
         [HttpPost("AddNote")]
@@ -90,8 +98,7 @@ namespace FunDo_Notes.Controllers
         public IActionResult GetNote(int NoteID)
         {
             try
-            {
-                Note specificNote = new Note();
+            {  
                 var getNote = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
                 var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
                 int UserID = Int32.Parse(userid.Value);
@@ -99,7 +106,7 @@ namespace FunDo_Notes.Controllers
                 {
                     return this.BadRequest(new { success = false, status = 200, message = "Provide an existing Note ID" });
                 }
-                specificNote = this.noteBL.GetNote(UserID, NoteID);
+                var specificNote = this.noteBL.GetNote(UserID, NoteID);
                 return this.Ok(new { success = true, status = 200, note = specificNote });
             }
             catch(Exception ex)
@@ -273,6 +280,42 @@ namespace FunDo_Notes.Controllers
                 List<NotesColourModel> note = new List<NotesColourModel>();
                 note = this.noteBL.GetAllNote_Colour(UserID);
                 return this.Ok(new { success = true, status = 200, noteList = note });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [Authorize]
+        [HttpGet("GetAllNoteUsingRedish")]
+        public IActionResult GetAllNotesUsingRedish()
+        {
+            try
+            {
+                /*var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                int UserID = Int32.Parse(userid.Value);
+                List<NoteResponseModel> note = new List<NoteResponseModel>();
+                note = this.noteBL.GetAllNotes(UserID);*/
+                string CacheKey = "NoteList";
+                string SerializedNoteList;
+                var NoteList = new List<NoteResponseModel>();
+                var RedishNoteList=_cache.Get(CacheKey);
+                if(RedishNoteList != null)
+                {
+                    SerializedNoteList = Encoding.UTF8.GetString(RedishNoteList);
+                    NoteList = JsonConvert.DeserializeObject<List<NoteResponseModel>>( SerializedNoteList);
+                }
+                else
+                {
+                    var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+                    int UserID = Int32.Parse(userid.Value);
+                    NoteList= this.noteBL.GetAllNotes(UserID); 
+                    SerializedNoteList=JsonConvert.SerializeObject(NoteList);
+                    RedishNoteList=Encoding.UTF8.GetBytes(SerializedNoteList);
+                    var option = new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(20)).SetAbsoluteExpiration(TimeSpan.FromHours(6));
+                    _cache.SetAsync(CacheKey, RedishNoteList, option);
+                }
+                return this.Ok(new { success = true, status = 200 , data=NoteList});
             }
             catch (Exception ex)
             {

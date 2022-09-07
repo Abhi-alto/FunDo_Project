@@ -35,6 +35,7 @@ namespace FunDo_Notes
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddMemoryCache();
             services.AddDbContext<FunDoContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("CompanyConnStr")));
             //swagger code
@@ -100,6 +101,12 @@ namespace FunDo_Notes
             services.AddTransient<INoteBL, NoteBL>();
             services.AddTransient<ILabelRL, LabelRL>();
             services.AddTransient<ILabelBL, LabelBL>();
+            services.AddDistributedRedisCache(
+               options =>
+               {
+                   options.Configuration = "Localhost:6379";
+               }
+               );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

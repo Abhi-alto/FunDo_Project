@@ -28,10 +28,10 @@ namespace FunDo_Notes.Controllers
         {
             try
             {
-                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var label = funDoContext.Labels.Where(x => x.NoteID == NoteID).FirstOrDefault();
                 var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
                 int UserID = Int32.Parse(userid.Value);
-                if (note == null)
+                if (label == null)
                 {
                     return this.BadRequest(new { success = false, status = 400, message = "Provide a correct note" });
                 }
@@ -49,10 +49,10 @@ namespace FunDo_Notes.Controllers
         {
             try
             {
-                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var label = funDoContext.Labels.Where(x => x.NoteID == NoteID).FirstOrDefault();
                 var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
                 int UserID = Int32.Parse(userid.Value);
-                if (note == null)
+                if (label == null)
                 {
                     return this.BadRequest(new { success = false, status = 400, message = "Provide a correct note" });
                 }
@@ -74,7 +74,7 @@ namespace FunDo_Notes.Controllers
         {
             try
             {
-                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                var note = funDoContext.Labels.Where(x => x.NoteID == NoteID).FirstOrDefault();
                 var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
                 int UserID = Int32.Parse(userid.Value);
                 if (note == null)
@@ -99,8 +99,8 @@ namespace FunDo_Notes.Controllers
         {
             try
             {
-                var note = funDoContext.Notes.Where(x => x.NoteID == NoteID).FirstOrDefault();
-                if (note == null)
+                var label = funDoContext.Labels.Where(x => x.NoteID == NoteID).FirstOrDefault();
+                if (label == null)
                 {
                     return this.BadRequest(new { success = false, status = 400, message = "Provide a correct note" });
                 }

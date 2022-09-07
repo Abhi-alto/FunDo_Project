@@ -1,4 +1,7 @@
-﻿using RepositoryLayer.Interface;
+﻿using CommonLayer.Label;
+using Microsoft.EntityFrameworkCore;
+using RepositoryLayer.Interface;
+//using RepositoryLayer.Migrations;
 using RepositoryLayer.Services.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,7 +24,11 @@ namespace RepositoryLayer.Services
         {
             try
             {
+                var user = fundoContext.Users.Where(x => x.UserId == UserId).FirstOrDefault();
+                var note=fundoContext.Notes.Where(x=>x.NoteID==NoteID && x.UserId == UserId).FirstOrDefault();
                 Label label = new Label();
+                label.User = user;
+                label.Note = note;
                 label.UserId = UserId;
                 label.NoteID = NoteID;
                 label.LabelName = LabelName;
@@ -54,6 +61,7 @@ namespace RepositoryLayer.Services
             }
         }
 
+
         public async Task<bool> Update_NoteLabel(int UserId, int NoteID, string LabelName)
         {
             try
@@ -67,6 +75,35 @@ namespace RepositoryLayer.Services
                 label.LabelName=LabelName;
                 await fundoContext.SaveChangesAsync();
                 return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<List<LabelModel>> GetLabelByNoteID(int UserId, int NoteID)
+        {
+            try
+            {
+                var label = this.fundoContext.Labels.FirstOrDefault(x => x.UserId == UserId);
+                var result = await (from user in fundoContext.Users
+                                    join notes in fundoContext.Notes on user.UserId equals UserId //where notes.NoteId == NoteId
+                                    join labels in fundoContext.Labels on notes.NoteID equals labels.NoteID
+                                    where labels.NoteID == NoteID && labels.UserId == UserId
+                                    select new LabelModel
+                                    {
+                                        UserId = UserId,
+                                        NoteId = notes.NoteID,
+                                        LabelName = labels.LabelName,
+                                        Title = notes.Title,
+                                        FirstName = user.FirstName,
+                                        LastName = user.LastName,
+                                        email = user.email,
+                                        Description = notes.Description,
+                                        Colour = notes.Colour,
+                                        CreatedDate=labels.User.CreatedDate
+                                    }).ToListAsync();
+                return result;
             }
             catch(Exception ex)
             {

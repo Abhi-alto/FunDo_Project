@@ -1,7 +1,6 @@
 ﻿using CommonLayer.Label;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer.Interface;
-//using RepositoryLayer.Migrations;
 using RepositoryLayer.Services.Entities;
 using System;
 using System.Collections.Generic;
@@ -106,6 +105,36 @@ namespace RepositoryLayer.Services
                 return result;
             }
             catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<LabelModel>> GetAll_LabelsByNoteID(int UserId)
+        {
+            try
+            {
+                var label = this.fundoContext.Labels.FirstOrDefault(x => x.UserId == UserId);
+                var result = await(from user in fundoContext.Users
+                                   join notes in fundoContext.Notes on user.UserId equals UserId //where notes.NoteId == NoteId
+                                   join labels in fundoContext.Labels on notes.NoteID equals labels.NoteID
+                                   where labels.UserId == UserId
+                                   select new LabelModel
+                                   {
+                                       UserId = UserId,
+                                       NoteId = notes.NoteID,
+                                       LabelName = labels.LabelName,
+                                       Title = notes.Title,
+                                       FirstName = user.FirstName,
+                                       LastName = user.LastName,
+                                       email = user.email,
+                                       Description = notes.Description,
+                                       Colour = notes.Colour,
+                                       CreatedDate = labels.User.CreatedDate
+                                   }).ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }

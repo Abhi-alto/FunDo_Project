@@ -63,5 +63,17 @@ namespace BuisnessLayer.Services
                 throw ex;
             }
         }
+
+        public async Task<List<LabelModel>> GetAll_LabelsByNoteID(int UserId)
+        {
+            try
+            {
+                return await this.labelRL.GetAll_LabelsByNoteID(UserId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

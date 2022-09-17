@@ -64,11 +64,11 @@ namespace BuisnessLayer.Services
             }
         }
 
-        public async Task<List<LabelModel>> GetAll_LabelsByNoteID(int UserId)
+        public async Task<List<LabelModel>> GetAll_LabelsByUserID(int UserId)
         {
             try
             {
-                return await this.labelRL.GetAll_LabelsByNoteID(UserId);
+                return await this.labelRL.GetAll_LabelsByUserID(UserId);
             }
             catch (Exception ex)
             {

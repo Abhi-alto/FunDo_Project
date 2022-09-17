@@ -101,6 +101,8 @@ namespace FunDo_Notes
             services.AddTransient<INoteBL, NoteBL>();
             services.AddTransient<ILabelRL, LabelRL>();
             services.AddTransient<ILabelBL, LabelBL>();
+            services.AddTransient<ICollabRL, CollabRL>();
+            services.AddTransient<ICollabBL, CollabBL>();
             services.AddDistributedRedisCache(
                options =>
                {

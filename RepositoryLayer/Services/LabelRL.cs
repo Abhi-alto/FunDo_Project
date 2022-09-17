@@ -110,7 +110,7 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public async Task<List<LabelModel>> GetAll_LabelsByNoteID(int UserId)
+        public async Task<List<LabelModel>> GetAll_LabelsByUserID(int UserId)
         {
             try
             {

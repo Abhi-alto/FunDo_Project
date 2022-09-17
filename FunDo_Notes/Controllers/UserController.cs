@@ -3,6 +3,7 @@ using CommonLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using RepositoryLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,13 @@ namespace FunDo_Notes.Controllers
         IUserBL userBL;
         private IConfiguration _config;
         public FunDoContext funDoContext;
-        public UserController(IUserBL userBL, IConfiguration config, FunDoContext funDoContext)
+        private readonly ILogger<UserController> logger;
+        public UserController(IUserBL userBL, IConfiguration config, FunDoContext funDoContext, ILogger<UserController> logger)
         {
             this.userBL = userBL;
             this._config = config;
             this.funDoContext = funDoContext;
+            this.logger = logger;
         }
         [HttpPost("Register")]
         public IActionResult Register(UserPostModel userPostModel)
@@ -30,10 +33,12 @@ namespace FunDo_Notes.Controllers
             try
             {
                 this.userBL.Register(userPostModel);
+                this.logger.LogInformation("New user successfully registered with Name:"+ userPostModel.FirstName + "\n"); 
                 return this.Ok(new {sucess=true,status=200,message=$"Registartion successful for {userPostModel.email}"});
             }
             catch(Exception ex)
             {
+                logger.LogCritical("Exception Thrown: "+ex.Message+"  ");
                 throw ex;
             }
         }

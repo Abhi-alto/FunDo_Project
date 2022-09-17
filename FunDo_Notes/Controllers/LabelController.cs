@@ -116,13 +116,13 @@ namespace FunDo_Notes.Controllers
         }
         [Authorize]
         [HttpGet("GeAllNoteLabelsByUserId")]
-        public async Task<IActionResult> GetAll_LabelsByNoteID()
+        public async Task<IActionResult> GetAll_LabelsByUserID()
         {
             try
             {
                 var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
                 int UserID = Int32.Parse(userid.Value);
-                var labels = await this.labelBl.GetAll_LabelsByNoteID(UserID);
+                var labels = await this.labelBl.GetAll_LabelsByUserID(UserID);
                 return this.Ok(new { success = true, status = 200, Labels = labels });
             }
             catch (Exception ex)

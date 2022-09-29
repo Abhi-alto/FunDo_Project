@@ -59,7 +59,7 @@ namespace FunDo_Notes.Controllers
                 throw ex;
             }
         }
-        [HttpPost("Forget Password/{email}")]
+        [HttpPost("ForgetPassword/{email}")]
         public IActionResult ForgetPassword(string email)
         {
             try

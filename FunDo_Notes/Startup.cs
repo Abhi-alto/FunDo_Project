@@ -38,6 +38,14 @@ namespace FunDo_Notes
             services.AddMemoryCache();
             services.AddDbContext<FunDoContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("CompanyConnStr")));
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                name: "AllowOrigin",
+              builder => {
+                  builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+              });
+            });
             //swagger code
             services.AddSwaggerGen(swagger =>
             {
@@ -118,7 +126,7 @@ namespace FunDo_Notes
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors("AllowOrigin");
             app.UseHttpsRedirection();
 
             app.UseRouting();

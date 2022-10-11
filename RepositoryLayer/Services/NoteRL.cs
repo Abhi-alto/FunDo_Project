@@ -108,6 +108,8 @@ namespace RepositoryLayer.Services
                    Lastname = u.LastName,
                    Email = u.email,
                    CreatedDate = u.CreatedDate,
+                   isArchive = n.isArchive,
+                   isTrash = n.isTrash
                }).ToList();
             }
             catch(Exception ex)

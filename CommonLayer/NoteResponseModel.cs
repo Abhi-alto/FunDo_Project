@@ -15,5 +15,7 @@ namespace CommonLayer
         public string Lastname {get; set;}
         public string Email { get; set; }
         public DateTime CreatedDate { get; set; }
+        public bool isArchive { get; set; }
+        public bool isTrash { get; set; }
     }
 }
